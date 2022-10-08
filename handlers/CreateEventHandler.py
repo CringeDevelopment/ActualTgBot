@@ -49,7 +49,7 @@ async def UploadDescription(message : types.Message, state : FSMContext):
 	await CreatingSteps.next()
 
 async def UploadDate(message : types.Message, state : FSMContext):
-	old_date = (message.text).split('/')
+	old_date = (message.text).split('/')#ЧЕЙ ТО ТАСК
 	year = old_date[2].split(' ')[0]
 	time = old_date[2].split(' ')[1]
 	new_date = "" + year + '-' + old_date[1] + '-' + old_date[0] + ' ' + time 
