@@ -3,4 +3,8 @@ handlers/__pycache__
 keyboards/__pycache__
 source/__pycache__
 sql_methods/__pycache__
+<<<<<<< Updated upstream
 /venv
+=======
+venv
+>>>>>>> Stashed changes

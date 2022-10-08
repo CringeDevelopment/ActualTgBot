@@ -48,7 +48,6 @@ async def create_sublist(list_name, columns):
                 create_querry += arr[i] + ' ' + slovar[arr[i]] + ')' 
                 break
             create_querry += arr[i] + ' ' + slovar[arr[i]] + ','
-            print(create_querry)
         cursor.execute(create_querry)
         connection.commit()
         return 1
