@@ -1,0 +1,7 @@
+@echo off
+
+call &~dp0komitet\venv\Scripts\activate
+
+python C:\Users\ASUS\Documents\GitHub\komitet_bot
+
+pause
