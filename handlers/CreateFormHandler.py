@@ -31,7 +31,8 @@ class FormSteps(StatesGroup):
 	NewColumn = State()
 
 async def WelcomeProcess(callback : types.CallbackQuery, state : FSMContext):
-	await state.update_data(id_ = callback.data.split('_')[2][1]+callback.data.split('_')[2][2]) #ГЕНИАЛЬНОЕ РЕШЕНИЕ, НЕ КОСТЫЛЬ
+	a = callback.data.split('_')[2]
+	await state.update_data(id_ = a) #BUGFIX
 	await state.update_data(columns_arr = '')
 	await callback.message.answer('Welcome text, now u ll create form for event, u should only tap to keyboard', reply_markup = FormColumnMenu)
 	await FormSteps.NewColumn.set()

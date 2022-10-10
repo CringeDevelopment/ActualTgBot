@@ -137,8 +137,8 @@ def register_SimpleHandlers(dp : Dispatcher):
 	dp.register_message_handler(AdminBisProcess, commands=['БИС'], state=AdminState.admin)
 	dp.register_message_handler(AdministrationProcess, commands=['Администрация'], state=AdminState.admin)
 
-	dp.register_callback_query_handler(TiosCallback, Text(startswith="tios_button_"))
-	dp.register_callback_query_handler(BisCallback, Text(startswith="bis_button_"))
+	dp.register_callback_query_handler(TiosCallback, Text(startswith="tios_button_"), state = '*')# BUGREPORT 
+	dp.register_callback_query_handler(BisCallback, Text(startswith="bis_button_"), state = '*')# BUGREPORT
 	dp.register_callback_query_handler(UserBackCallback, Text(startswith="go_back"), state = AdminState.user) #Заменить текст на лямбда функцию
 	dp.register_callback_query_handler(AdminBackCallback, Text(startswith="go_back"), state = AdminState.admin)
 	dp.register_callback_query_handler(AdministrationCallback, Text(startswith="administration_button_"), state=AdminState.admin)
