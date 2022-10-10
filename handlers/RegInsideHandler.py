@@ -27,5 +27,5 @@ async def AddInsideProcess(message : types.Message, state : FSMContext):
 		await admin_states.SetUser()
 
 def register_RegInsideHandlers(dp : Dispatcher):
-	dp.register_message_handler(WelcomeInsideProcess, commands = ['регистрация'], state = AdminState.user)
+	dp.register_message_handler(WelcomeInsideProcess, commands = ['reg'], state = '*')
 	dp.register_message_handler(AddInsideProcess, content_types=['photo'],  state = InsideSteps.Add)
