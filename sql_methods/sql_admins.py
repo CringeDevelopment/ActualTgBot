@@ -50,7 +50,7 @@ async def add_admin(log):
 #################################################################################################################
 #удалить администратора, id передается как число, пример : await delete_admin(Ваш id)
 #################################################################################################################
-async def delete_admin(id_):
+async def delete_admin(log):
     connection = mysql.connector.connect(
             host=host,
             port = port,
@@ -60,11 +60,11 @@ async def delete_admin(id_):
         )
     cursor = connection.cursor()
     try:
-        cursor.execute("SELECT id FROM admin WHERE id = %s", [id_])
+        cursor.execute("SELECT login FROM admin WHERE login = %s", [log])
         if cursor.fetchone() is None:
             return 404
         else:
-            cursor.execute("DELETE FROM admin WHERE id = %s", [id_])
+            cursor.execute("DELETE FROM admin WHERE login = %s", [log])
             connection.commit()
             return 1
     finally:

@@ -21,7 +21,7 @@ async def WelcomeProcess(message: types.Message):
 		await message.delete()
 		await message.answer(f"{message.from_user.full_name} something welcome text, your status is Admin", reply_markup = AdminMainMenu)
 	else:
-		await admin_states.SetAdmin()
+		await admin_states.SetUser()
 		await message.delete()
 		await message.answer(f"{message.from_user.full_name} something welcome text, your status is User", reply_markup = UserMainMenu)
 
@@ -80,10 +80,15 @@ async def AdminBisProcess(message: types.Message):
 	await message.answer("smthng tios words", reply_markup = BisMenu)
 
 async def AdministrationProcess(message: types.Message):
-	await message.delete()
-	await message.answer("destroy keyboards", reply_markup = types.ReplyKeyboardRemove())
-	await message.answer("for admins", reply_markup = AdministrationMenu)
-
+	AdminResult = await sql_admins.log_in(message.from_user.id)
+	if AdminResult == 1:
+		await message.delete()
+		await message.answer("destroy keyboards", reply_markup = types.ReplyKeyboardRemove())
+		await message.answer("for admins", reply_markup = AdministrationMenu)
+		await admin_states.SetAdmin()
+	else:
+		await message.answer(f"{message.from_user.full_name} u not admin", reply_markup = UserMainMenu)
+	
 
 async def UserBackCallback(callback : types.CallbackQuery):
 	await callback.message.answer('return to main menu', reply_markup = UserMainMenu)
@@ -135,7 +140,7 @@ def register_SimpleHandlers(dp : Dispatcher):
 	dp.register_message_handler(BisProcess, commands=['БИС'], state=AdminState.user)
 	dp.register_message_handler(AdminTiosProcess, commands=['ТИОС'], state=AdminState.admin)
 	dp.register_message_handler(AdminBisProcess, commands=['БИС'], state=AdminState.admin)
-	dp.register_message_handler(AdministrationProcess, commands=['Администрация'], state=AdminState.admin)
+	dp.register_message_handler(AdministrationProcess, commands=['Администрация'], state='*')
 
 	dp.register_callback_query_handler(TiosCallback, Text(startswith="tios_button_"), state = '*')# BUGREPORT 
 	dp.register_callback_query_handler(BisCallback, Text(startswith="bis_button_"), state = '*')# BUGREPORT
