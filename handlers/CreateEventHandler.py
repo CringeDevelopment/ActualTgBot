@@ -15,7 +15,6 @@ from source import admin_states
 from source.admin_states import AdminState
 
 
-
 class CreatingSteps(StatesGroup):
 	Title = State()
 	Type = State()

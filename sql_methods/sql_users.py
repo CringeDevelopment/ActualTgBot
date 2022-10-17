@@ -38,7 +38,7 @@ async def CreateAcessMenu(log, isAdmin):
 #################################################################################################################
 #добавить администратора, логин передается как число, пример : await add_admin(Ваш логин)
 #################################################################################################################
-async def add_user(log, name, photo):
+async def add_user(log, name, typ, photo):
     connection = mysql.connector.connect(
             host=host,
             port = port,
@@ -52,7 +52,7 @@ async def add_user(log, name, photo):
         if cursor.fetchone() is not None:
             return 606
         else:
-            cursor.execute("INSERT INTO inside_subs(login, name, photo) VALUES (%s, %s, %s)", [log, name, photo])
+            cursor.execute("INSERT INTO inside_subs(login, name, photo, type) VALUES (%s, %s, %s, %s)", [log, name, photo, typ])
             connection.commit()
             return 1
     finally:

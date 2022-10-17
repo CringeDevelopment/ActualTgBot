@@ -1,8 +1,23 @@
 from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup, KeyboardButton
 
-FormList = ['логин', 'имя', 'описание', 'фото', 'дата рождения', 'факультет', 'группа', 'курс',]
 
 BackReplyButton = KeyboardButton('/Назад')
+
+
+RB1 = KeyboardButton('Соискатель')
+RB2 = KeyboardButton('Разработчик')
+RB3 = KeyboardButton('Дизайнер')
+RB4 = KeyboardButton('Организатор')
+RB5 = KeyboardButton('СММщик')
+RoleMenu = ReplyKeyboardMarkup(resize_keyboard = True).add(RB1).row(RB2, RB3).row(RB4, RB5).add(BackReplyButton)
+
+
+
+
+
+FormList = ['логин', 'имя', 'описание', 'фото', 'дата рождения', 'факультет', 'группа', 'курс',]
+
+
 #FB - FormButton
 CompleteButton = KeyboardButton('ГОТОВО')
 FB1 = KeyboardButton('log')

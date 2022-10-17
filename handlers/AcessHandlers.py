@@ -10,6 +10,16 @@ from sql_methods import sql_admins, sql_users
 from source import admin_states
 from source.admin_states import AdminState
 
+global slovar
+slovar = {
+	404 : 'Сотрудник комитета',
+	1 : 'Администратор ресурса',
+	'aspirant1' : 'Поздравляем, ты прошел собеседование!',
+	'aspirant0' : 'Кажется, ты не прошел собеседование('
+
+}
+
+
 async def ShowProcess(message : types.Message, state : FSMContext):
 	UserList = await sql_users.show_users()
 	UID = message.from_user.id
@@ -18,19 +28,20 @@ async def ShowProcess(message : types.Message, state : FSMContext):
 		await admin_states.SetAdmin()
 	else:
 		for i in range(0, len(UserList)):
-			menu = await sql_users.CreateAcessMenu(UserList[i][1], await sql_admins.log_in(UserList[i][1]))
-			await bot.send_photo(UID, UserList[i][3], f'Сотрудник комитета {UserList[i][2]}:', reply_markup = menu)
+			a = await sql_admins.log_in(UserList[i][1])
+			menu = await sql_users.CreateAcessMenu(UserList[i][1], a)
+			await bot.send_photo(UID, UserList[i][3], f'{slovar[a]} {UserList[i][2]}, {UserList[i][4]}', reply_markup = menu)
 		await bot.send_message(UID, f'{len(UserList)} peoples', reply_markup = AdminMainMenu)
 
 async def AcessCallback(callback : types.CallbackQuery):
 	log = callback.data.split('_')[2]
 	result = await sql_admins.add_admin(log)
 	if result == 606:
-		await callback.message.answer('LOGIN ALREADY EXISTS', reply_markup = AdminMainMenu)
+		await callback.answer('LOGIN ALREADY EXISTS', show_alert = True)
 		await admin_states.SetAdmin()
 	else:
-		await callback.message.answer(f'{callback.from_user.full_name}, u create new admin')
-		await bot.send_message(log, 'Congradulations, u admin now!', reply_markup = AdminMainMenu)
+		await callback.answer(f'{callback.from_user.full_name}, u create new admin', show_alert = True)
+		await bot.send_message(log, f'Поздравляем, ты прошел собеседование!', reply_markup = AdminMainMenu)
 		await admin_states.SetAdmin()
 
 async def DeleteCallback(callback : types.CallbackQuery):
@@ -38,7 +49,7 @@ async def DeleteCallback(callback : types.CallbackQuery):
 	await sql_users.delete_user(log)
 	await sql_admins.delete_admin(log)
 	await callback.message.delete()
-	await bot.send_message(log, 'Oh shit! u have been deleted!', reply_markup = UserMainMenu)
+	await bot.send_message(log, 'Кажется, ты не прошел собеседование(', reply_markup = UserMainMenu)
 	await admin_states.SetAdmin()
 
 def register_AcessHandlers(dp : Dispatcher):
