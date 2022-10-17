@@ -33,7 +33,7 @@ async def TypeProcess(message : types.Message, state : FSMContext):
 	except:
 		await message.answer(f'{message.from_user.full_name}, выбери свою должность <u>на клавиатуре!</u>', reply_markup = RoleMenu)
 		return
-	await message.answer(f'Отлично, {message.text}, отправь мне своё <u>ФИО и фотографию</u> одним сообщением!', reply_markup = types.ReplyKeyboardRemove)
+	await message.answer(f'Отлично, {message.text}, отправь мне своё <u>ФИО и фотографию</u> одним сообщением!', reply_markup = types.ReplyKeyboardRemove())
 	await InsideSteps.next()
 
 async def AddInsideProcess(message : types.Message, state : FSMContext):

@@ -123,3 +123,22 @@ async def show_users():
             return res
     finally:
         connection.close()
+
+async def show_user(log):
+    connection = mysql.connector.connect(
+            host=host,
+            port = port,
+            user=user,
+            passwd=password,
+            database=db_name
+        )
+    cursor = connection.cursor()
+    try:
+        cursor.execute("SELECT * FROM inside_subs WHERE login = %s", [log])
+        res = cursor.fetchone()
+        if res is None:
+            return 404
+        else:
+            return res
+    finally:
+        connection.close()
