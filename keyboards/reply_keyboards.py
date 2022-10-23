@@ -8,15 +8,8 @@ RB2 = KeyboardButton('Разработчик')
 RB3 = KeyboardButton('Дизайнер')
 RB4 = KeyboardButton('Организатор')
 RB5 = KeyboardButton('СММщик')
+AspirantMenu = ReplyKeyboardMarkup(resize_keyboard = True).row(RB2, RB3).row(RB4, RB5).add(BackReplyButton)
 RoleMenu = ReplyKeyboardMarkup(resize_keyboard = True).add(RB1).row(RB2, RB3).row(RB4, RB5).add(BackReplyButton)
-
-#AB - APPLICANT BUTTON
-
-AB1 = KeyboardButton('Разработчик')
-AB2 = KeyboardButton('Дизайнер')
-AB3 = KeyboardButton('Организатор')
-AB4 = KeyboardButton('СММщик')
-ApplicantRoleMenu = ReplyKeyboardMarkup(resize_keyboard = True).add(AB1, AB2).row(AB2, AB4).add(BackReplyButton)
 
 
 FormList = ['логин', 'имя', 'описание', 'фото', 'дата рождения', 'факультет', 'группа', 'курс',]
