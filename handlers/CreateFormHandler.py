@@ -40,8 +40,6 @@ async def WelcomeProcess(callback : types.CallbackQuery, state : FSMContext):
 async def ColumnProcess(message : types.Message, state : FSMContext):
 	if message.text == 'ГОТОВО':
 		data = await state.get_data()
-		if len(data['columns_arr'].split('/')) < 1:
-			await message.answer(f'{message.from_user.full_name} НЕХОРОШИЙ!')
 		res = await sql_sublists.create_sublist(data['id_'], data['columns_arr'])
 		if res == 1:
 			await message.answer('nice', reply_markup = AdminMainMenu)

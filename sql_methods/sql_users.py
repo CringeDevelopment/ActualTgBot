@@ -23,76 +23,22 @@ def create_connection():
 
 
 
-async def CreateAcessMenu(log, isAdmin, isTarget):
+async def CreateAcessMenu(log, isAdmin):
     AcessMenu = InlineKeyboardMarkup(row_width=1)
-    if isTarget != '0':
-        Tdata = f'promotion_{log}_{isTarget}'
-        PromotionButton = InlineKeyboardButton(text = "ПОВЫСИТЬ", callback_data= Tdata)
-        AcessMenu.insert(PromotionButton)
-    if isAdmin == 404 and isTarget == '0':
+    if isAdmin == 404:
         Adata = f'make_admin_{log}'
         HighAcessButton = InlineKeyboardButton(text = "СДЕЛАТЬ АДМИНИСТРАТОРОМ", callback_data= Adata)
         AcessMenu.insert(HighAcessButton)
-    Ddata = f'delete_{log}_{isTarget}'
+    Ddata = f'delete_{log}'
     DeleteButton = InlineKeyboardButton(text = "УДАЛИТЬ", callback_data= Ddata)
     AcessMenu.insert(DeleteButton)
     return AcessMenu
 
 
-async def promotion(log, target):
-    connection = mysql.connector.connect(
-            host=host,
-            port = port,
-            user=user,
-            passwd=password,
-            database=db_name
-        )
-    cursor = connection.cursor()
-    try:
-        cursor.execute("SELECT target FROM inside_subs WHERE login = %s", [log])
-        result = cursor.fetchone()
-        if result[0] is None:
-            return 404
-        elif result[0] == 0:
-            return 606
-        else:
-            cursor.execute("UPDATE inside_subs SET type = %s WHERE login = %s", [target,log])
-            cursor.execute("UPDATE inside_subs SET target = %s WHERE login = %s", [0,log])
-
-            connection.commit()
-            return 1
-    finally:
-        connection.close()
-
-
-async def extract_target(log):
-    connection = mysql.connector.connect(
-            host=host,
-            port = port,
-            user=user,
-            passwd=password,
-            database=db_name
-        )
-    cursor = connection.cursor()
-    try:
-        cursor.execute("SELECT target FROM inside_subs WHERE login = %s", [log])
-        result = cursor.fetchone()
-        if result[0] is None:
-            return 404
-        elif result[0] == 0:
-            return 606
-        else:
-            return result[0]
-    finally:
-        connection.close()
-
-
-
-
 #################################################################################################################
 #добавить администратора, логин передается как число, пример : await add_admin(Ваш логин)
 #################################################################################################################
-async def add_user(log, name, typ, target, photo):
+async def add_user(log, name, typ, photo):
     connection = mysql.connector.connect(
             host=host,
             port = port,
@@ -106,7 +52,7 @@ async def add_user(log, name, typ, target, photo):
         if cursor.fetchone() is not None:
             return 606
         else:
-            cursor.execute("INSERT INTO inside_subs(login, name, photo, type, target) VALUES (%s, %s, %s, %s, %s)", [log, name, photo, typ, target])
+            cursor.execute("INSERT INTO inside_subs(login, name, photo, type) VALUES (%s, %s, %s, %s)", [log, name, photo, typ])
             connection.commit()
             return 1
     finally:
