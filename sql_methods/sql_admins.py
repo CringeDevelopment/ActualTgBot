@@ -83,6 +83,7 @@ async def log_in(log):
         )
     cursor = connection.cursor()
     try:
+        print("sql ok")
         cursor.execute("SELECT id FROM admin WHERE login = %s", [log])
         if cursor.fetchone() is None:
             return 404

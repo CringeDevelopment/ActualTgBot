@@ -15,6 +15,7 @@ from handlers.CreateEventHandler import CreatingSteps
 
 async def WelcomeProcess(message: types.Message):
 	#global AdminResult
+	print("its ok")
 	AdminResult = await sql_admins.log_in(message.from_user.id)
 	if AdminResult == 1:
 		await admin_states.SetAdmin()
