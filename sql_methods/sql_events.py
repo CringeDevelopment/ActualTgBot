@@ -56,7 +56,7 @@ async def extract_events():
     cursor = connection.cursor()
     try:
         date_now = datetime.now()
-        cursor.execute("SELECT id, name, locate, description, e_date, image, web_source FROM events WHERE e_date >= (%s)", [date_now])
+        cursor.execute("SELECT id, name, description, e_date, image, web_source, locate FROM events WHERE e_date >= (%s)", [date_now])
         response = cursor.fetchall()
         if len(response) > 0:
             return response
