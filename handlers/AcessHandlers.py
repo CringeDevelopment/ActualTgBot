@@ -87,5 +87,5 @@ def register_AcessHandlers(dp : Dispatcher):
 	dp.register_message_handler(ShowProcess, commands = ['admin_acess'], state = AdminState.admin)
 
 	dp.register_callback_query_handler(AcessCallback, Text(startswith="make_admin_"), state = AdminState.admin)
-	dp.register_callback_query_handler(DeleteCallback, Text(startswith="delete_"), state = AdminState.admin)
+	dp.register_callback_query_handler(DeleteCallback, Text(startswith="USERdelete_"), state = AdminState.admin)
 	dp.register_callback_query_handler(PromotionCallback, Text(startswith="promotion_"), state = AdminState.admin)

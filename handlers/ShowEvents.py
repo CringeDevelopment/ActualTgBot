@@ -5,7 +5,7 @@ from create_bot import dp, bot
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
-from datetime import datetime
+from source.admin_states import AdminState
 from keyboards.reply_keyboards import AdminMainMenu, UserMainMenu
 from sql_methods import sql_admins, sql_sublists, sql_qq, sql_events
 
@@ -54,5 +54,20 @@ async def ShowEventsProcess(message : types.Message, state : FSMContext):
 
 
 
+
+
+async def DeleteEventCallback(callback : types.CallbackQuery):
+	EventName = callback.data.split('_')[1]
+	await sql_events.delete_event(EventName)
+	await callback.message.delete()
+
+
+
+
+
+
 def register_ShowEventsHandlers(dp : Dispatcher):
-	dp.register_message_handler(ShowEventsProcess, commands = ['events'], state = '*')
+	dp.register_message_handler(ShowEventsProcess, commands = ['events'], state = [AdminState.admin, AdminState.user])
+
+	dp.register_callback_query_handler(DeleteEventCallback, Text(startswith = 'EVENTdelete_'), state = AdminState.admin)
+

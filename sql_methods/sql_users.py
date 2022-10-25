@@ -33,7 +33,7 @@ async def CreateAcessMenu(log, isAdmin, isTarget):
         Adata = f'make_admin_{log}'
         HighAcessButton = InlineKeyboardButton(text = "СДЕЛАТЬ АДМИНИСТРАТОРОМ", callback_data= Adata)
         AcessMenu.insert(HighAcessButton)
-    Ddata = f'delete_{log}_{isTarget}'
+    Ddata = f'USERdelete_{log}_{isTarget}'
     DeleteButton = InlineKeyboardButton(text = "УДАЛИТЬ", callback_data= Ddata)
     AcessMenu.insert(DeleteButton)
     return AcessMenu

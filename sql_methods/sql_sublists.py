@@ -20,7 +20,7 @@ slovar = {
 async def InlineRegMenu(isAdmin, isURL, id_, login_flag, log):
     RegMenu = InlineKeyboardMarkup(row_width = 1)
     if isAdmin != 404:
-        DeleteData = f'delete_event_{id_}'
+        DeleteData = f'EVENTdelete_{id_}'
         DeleteButton = InlineKeyboardButton(text = "УДАЛИТЬ МЕРОПРИЯТИЕ", callback_data=DeleteData)
         RegMenu.insert(DeleteButton)
     if login_flag == 1 and isURL == '0':
@@ -166,3 +166,14 @@ async def delete_sub(list_name, log):
     finally:
         connection.close()
 
+
+#async def delete_sublist(name):
+#    connection = mysql.connector.connect(
+#            host=host,
+#            port = port,
+#            user=user,
+#            passwd=password,
+#            database=db_name
+#        )
+#    cursor = connection.cursor()
+#    try:
