@@ -4,6 +4,7 @@ import os
 async def on_startup(_):
 	os.system('cls')
 	print('Мы вышли в онлайн. Закройте это окно чтобы прекратить работу')
+	#Добавление команд
 from handlers import SimpleHandlers, SubHandlers, CreateEventHandler, ServiceHandlers, CreateFormHandler, RegInsideHandler, AcessHandlers, ShowEvents
 try:
 	ServiceHandlers.register_ServiceHandlers(dp)

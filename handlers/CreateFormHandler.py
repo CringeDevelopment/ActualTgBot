@@ -17,6 +17,7 @@ from aiogram.dispatcher.filters import Text
 global slovar
 
 slovar = {
+	'закончить' : 'complete',
     'логин' : 'log',
     'имя' : 'name',
    'описание' : 'description',
@@ -39,7 +40,12 @@ async def WelcomeProcess(callback : types.CallbackQuery, state : FSMContext):
 	await FormSteps.NewColumn.set()
 
 async def ColumnProcess(message : types.Message, state : FSMContext):
-	if message.text == 'ГОТОВО':
+	try:
+		MessageResult = slovar[message.text]
+	except:
+		await message.answer('idi nahui', reply_markup =  FormColumnMenu)
+		return
+	if MessageResult == 'завершить':
 		data = await state.get_data()
 		if len(data['columns_arr'].split('/')) < 1:
 			await message.answer(f'{message.from_user.full_name} НЕХОРОШИЙ!')
@@ -50,10 +56,10 @@ async def ColumnProcess(message : types.Message, state : FSMContext):
 			await admin_states.SetAdmin()
 	else:
 		data = await state.get_data()
-		if message.text in data['columns_arr'].split('/'):
+		if MessageResult in data['columns_arr'].split('/'):
 			await message.answer('no no, only new buttons')
 		else:
-			new_data = data['columns_arr'] + '/'+message.text #КОСТЫЛЬ
+			new_data = data['columns_arr'] + '/'+MessageResult #КОСТЫЛЬ
 			await state.update_data(columns_arr = new_data)
 			await message.answer(f"""{data['columns_arr']} now, tap tap""") #РАБОТАЕТ НЕКОРРЕКТНО
 
