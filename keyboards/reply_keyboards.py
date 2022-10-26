@@ -25,7 +25,7 @@ FB5 = KeyboardButton('Дата рождения')
 FB6 = KeyboardButton('Факультет')
 FB7 = KeyboardButton('Группа')
 FB8 = KeyboardButton('Курс')
-FormColumnMenu = ReplyKeyboardMarkup(resize_keyboard = True).row(FB1,FB2,FB3).row(FB4,FB5,FB6).row(FB7,FB8).add(CompleteButton).add(BackReplyButton)
+FormColumnMenu = ReplyKeyboardMarkup(resize_keyboard = True).row(FB1,FB2,FB3).row(FB4,FB5,FB6).row(FB7,FB8,CompleteButton).add(BackReplyButton)
 
 
 
