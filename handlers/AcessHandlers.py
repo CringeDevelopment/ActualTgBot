@@ -1,14 +1,13 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton,ReplyKeyboardRemove
 from aiogram import types
 from aiogram.dispatcher import Dispatcher
 from create_bot import dp, bot
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters.state import State, StatesGroup
 from keyboards.reply_keyboards import  UserMainMenu, AdminMainMenu
 from sql_methods import sql_admins, sql_users
 from source import admin_states
 from source.admin_states import AdminState
+from aiogram.types import message
 
 
 global slovar
