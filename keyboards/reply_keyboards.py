@@ -16,16 +16,16 @@ FormList = ['логин', 'имя', 'описание', 'фото', 'дата р
 
 
 #FB - FormButton
-CompleteButton = KeyboardButton('ГОТОВО')
-FB1 = KeyboardButton('log')
-FB2 = KeyboardButton('name')
-FB3 = KeyboardButton('description')
-FB4 = KeyboardButton('photo')
-FB5 = KeyboardButton('BirthDate')
-FB6 = KeyboardButton('faculty')
-FB7 = KeyboardButton('group_')
-FB8 = KeyboardButton('course')
-FormColumnMenu = ReplyKeyboardMarkup(resize_keyboard = True).row(FB1,FB2,FB3,FB4,FB5,FB6,FB7,FB8).add(CompleteButton).add(BackReplyButton)
+CompleteButton = KeyboardButton('Завершить')
+FB1 = KeyboardButton('Логин')
+FB2 = KeyboardButton('Имя')
+FB3 = KeyboardButton('Описание')
+FB4 = KeyboardButton('Фото')
+FB5 = KeyboardButton('Дата рождения')
+FB6 = KeyboardButton('Факультет')
+FB7 = KeyboardButton('Группа')
+FB8 = KeyboardButton('Курс')
+FormColumnMenu = ReplyKeyboardMarkup(resize_keyboard = True).row(FB1,FB2,FB3).row(FB4,FB5,FB6).row(FB7,FB8).add(CompleteButton).add(BackReplyButton)
 
 
 
