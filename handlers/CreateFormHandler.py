@@ -40,11 +40,17 @@ async def WelcomeProcess(callback : types.CallbackQuery, state : FSMContext):
 	await FormSteps.NewColumn.set()
 
 async def ColumnProcess(message : types.Message, state : FSMContext):
+
+############### ПРОВЕРКА КОМАНДЫ ПО СЛОВАРЮ ####################################
+
 	try:
 		MessageResult = slovar[message.text]
 	except:
 		await message.answer('Пожалуйста, введите один из перечисленных параметров', reply_markup = FormColumnMenu)
 		return
+
+############### ЛОГИКА КНОПКИ ЗАВЕРШИТЬ ####################################
+
 	if MessageResult == 'complete':
 		data = await state.get_data()
 		if len(data['columns_arr'].split('/')) < 1:
@@ -54,17 +60,22 @@ async def ColumnProcess(message : types.Message, state : FSMContext):
 		if res == 1:
 			await message.answer('Форма сохранена в базе данных', reply_markup = AdminMainMenu)
 			await admin_states.SetAdmin()
+
+############### НА СЛУЧАЙ ПОВТОРЯЮЩИХСЯ ПАРАМЕТРОВ ####################################
+
 	else:
 		data = await state.get_data()
 		if MessageResult in data['columns_arr'].split('/'):
 			await message.answer('Пожалуйста, введите новые параметры для формы')
+
+############### ВЫВОД ВЫБРАННЫХ ПАРАМЕТРОВ И СОХРАНЕНИЕ ####################################
+
 		else:
-			new_data = data['columns_arr'] + '/'+MessageResult #КОСТЫЛЬ
+			new_data = data['columns_arr'] + '/' + MessageResult #КОСТЫЛЬ
 			await state.update_data(columns_arr = new_data)
-			await message.answer(f"""{data['columns_arr']} - выбранные параметры, пожалуйста,\
+			await message.answer(f"""{data['columns_arr']} {message.text} - выбранные параметры, пожалуйста,\
 введите новые или нажмите 'завершить'""") #РАБОТАЕТ НЕКОРРЕКТНО
 
 def register_CreateFormHandlers(dp : Dispatcher):
 	dp.register_callback_query_handler(WelcomeProcess, Text(startswith="create_form_"), state = AdminState.admin)
-
 	dp.register_message_handler(ColumnProcess, state=FormSteps.NewColumn)
