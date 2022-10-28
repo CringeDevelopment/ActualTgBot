@@ -17,15 +17,15 @@ from aiogram.dispatcher.filters import Text
 global slovar
 
 slovar = {
-	'закончить' : 'complete',
-    'логин' : 'log',
-    'имя' : 'name',
-   'описание' : 'description',
-   'фото' : 'photo',
-   'дата рождения' : 'BirthDate',
-   'факультет' : 'faculty',
-   'группа' : 'group_',
-   'курс' : 'course'
+	'Завершить' : 'complete',
+    'Логин' : 'log',
+    'Имя' : 'name',
+   'Описание' : 'description',
+   'Фото' : 'photo',
+   'Дата рождения' : 'BirthDate',
+   'Факультет' : 'faculty',
+   'Группа' : 'group_',
+   'Курс' : 'course'
 }
 
 
@@ -36,34 +36,46 @@ async def WelcomeProcess(callback : types.CallbackQuery, state : FSMContext):
 	a = callback.data.split('_')[2]
 	await state.update_data(id_ = a) #BUGFIX
 	await state.update_data(columns_arr = '')
-	await callback.message.answer('Welcome text, now u ll create form for event, u should only tap to keyboard', reply_markup = FormColumnMenu)
+	await callback.message.answer('Выберите параметры для будующей формы', reply_markup = FormColumnMenu)
 	await FormSteps.NewColumn.set()
 
 async def ColumnProcess(message : types.Message, state : FSMContext):
+
+############### ПРОВЕРКА КОМАНДЫ ПО СЛОВАРЮ ####################################
+
 	try:
 		MessageResult = slovar[message.text]
 	except:
-		await message.answer('idi nahui', reply_markup =  FormColumnMenu)
+		await message.answer('Пожалуйста, введите один из перечисленных параметров', reply_markup = FormColumnMenu)
 		return
-	if MessageResult == 'завершить':
+
+############### ЛОГИКА КНОПКИ ЗАВЕРШИТЬ ####################################
+
+	if MessageResult == 'complete':
 		data = await state.get_data()
 		if len(data['columns_arr'].split('/')) < 1:
-			await message.answer(f'{message.from_user.full_name} НЕХОРОШИЙ!')
+			await message.answer(f'{message.from_user.full_name} Пожалуйста, выберите параметры для формы!')
 			return
 		res = await sql_sublists.create_sublist(data['id_'], data['columns_arr'])
 		if res == 1:
-			await message.answer('nice', reply_markup = AdminMainMenu)
+			await message.answer('Форма сохранена в базе данных', reply_markup = AdminMainMenu)
 			await admin_states.SetAdmin()
+
+############### НА СЛУЧАЙ ПОВТОРЯЮЩИХСЯ ПАРАМЕТРОВ ####################################
+
 	else:
 		data = await state.get_data()
 		if MessageResult in data['columns_arr'].split('/'):
-			await message.answer('no no, only new buttons')
+			await message.answer('Пожалуйста, введите новые параметры для формы')
+
+############### ВЫВОД ВЫБРАННЫХ ПАРАМЕТРОВ И СОХРАНЕНИЕ ####################################
+
 		else:
-			new_data = data['columns_arr'] + '/'+MessageResult #КОСТЫЛЬ
+			new_data = data['columns_arr'] + '/' + MessageResult #КОСТЫЛЬ
 			await state.update_data(columns_arr = new_data)
-			await message.answer(f"""{data['columns_arr']} now, tap tap""") #РАБОТАЕТ НЕКОРРЕКТНО
+			await message.answer(f"""{data['columns_arr']} {message.text} - выбранные параметры, пожалуйста,\
+введите новые или нажмите 'завершить'""") #РАБОТАЕТ НЕКОРРЕКТНО
 
 def register_CreateFormHandlers(dp : Dispatcher):
 	dp.register_callback_query_handler(WelcomeProcess, Text(startswith="create_form_"), state = AdminState.admin)
-
 	dp.register_message_handler(ColumnProcess, state=FormSteps.NewColumn)
