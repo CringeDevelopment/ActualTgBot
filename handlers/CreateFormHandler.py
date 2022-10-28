@@ -73,7 +73,16 @@ async def ColumnProcess(message : types.Message, state : FSMContext):
 		else:
 			new_data = data['columns_arr'] + '/' + MessageResult #КОСТЫЛЬ
 			await state.update_data(columns_arr = new_data)
-			await message.answer(f"""{data['columns_arr']} {message.text} - выбранные параметры, пожалуйста,\
+			"""СОЗДАНИЕ ИНВЕРТИРОВАННОГО СЛОВАРЯ И ЕГО ЗАПИСЬ В ПЕРЕМЕННУЮ MSG
+				ПРИВЕСТИ ПЕРЕМЕННЫЕ В ЧИТАЕМЫЙ ВИД И РАЗОБРАТЬСЯ В АЛГОРИТМЕ"""
+			adapt_arr = new_data.split('/')
+			reversed_slovar = dict((v, k) for k, v in slovar.items())
+			msg = """FORM VIEW NOW:
+"""
+			for i in adapt_arr:
+				msg += f'|{reversed_slovar[adapt_arr[i]]}'
+
+			await message.answer(f"""{msg}
 введите новые или нажмите 'завершить'""") #РАБОТАЕТ НЕКОРРЕКТНО
 
 def register_CreateFormHandlers(dp : Dispatcher):
