@@ -71,16 +71,22 @@ async def ColumnProcess(message : types.Message, state : FSMContext):
 ############### ВЫВОД ВЫБРАННЫХ ПАРАМЕТРОВ И СОХРАНЕНИЕ ####################################
 
 		else:
-			new_data = data['columns_arr'] + '/' + MessageResult #КОСТЫЛЬ
+			""" НАЙДЕНА И УСТРАНЕНА ОШИБКА <'' + '/' + MessageResult'>
+				ПРИДУМАТЬ КАК УСТРАНИТЬ ЕЕ ЛУЧШЕ                      """
+			#
+			if data['columns_arr'] != '': new_data = data['columns_arr'] + '/' + MessageResult
+			else : new_data = MessageResult
+			#
 			await state.update_data(columns_arr = new_data)
 			"""СОЗДАНИЕ ИНВЕРТИРОВАННОГО СЛОВАРЯ И ЕГО ЗАПИСЬ В ПЕРЕМЕННУЮ MSG
 				ПРИВЕСТИ ПЕРЕМЕННЫЕ В ЧИТАЕМЫЙ ВИД И РАЗОБРАТЬСЯ В АЛГОРИТМЕ"""
-			adapt_arr = new_data.split('/')
+			print (new_data)
 			reversed_slovar = dict((v, k) for k, v in slovar.items())
 			msg = """FORM VIEW NOW:
 """
-			for i in adapt_arr:
-				msg += f'|{reversed_slovar[adapt_arr[i]]}'
+			for i in new_data.split('/'):
+				print(i)
+				msg += f'|{reversed_slovar[i]}|'
 
 			await message.answer(f"""{msg}
 введите новые или нажмите 'завершить'""") #РАБОТАЕТ НЕКОРРЕКТНО
