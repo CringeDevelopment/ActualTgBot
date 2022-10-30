@@ -71,25 +71,20 @@ async def ColumnProcess(message : types.Message, state : FSMContext):
 ############### ВЫВОД ВЫБРАННЫХ ПАРАМЕТРОВ И СОХРАНЕНИЕ ####################################
 
 		else:
-			""" НАЙДЕНА И УСТРАНЕНА ОШИБКА <'' + '/' + MessageResult'>
-				ПРИДУМАТЬ КАК УСТРАНИТЬ ЕЕ ЛУЧШЕ                      """
-			#
-			if data['columns_arr'] != '': new_data = data['columns_arr'] + '/' + MessageResult
+			if data['columns_arr'] != '': 
+				new_data = data['columns_arr'] + '/' + MessageResult
 			else : new_data = MessageResult
-			#
 			await state.update_data(columns_arr = new_data)
 			"""СОЗДАНИЕ ИНВЕРТИРОВАННОГО СЛОВАРЯ И ЕГО ЗАПИСЬ В ПЕРЕМЕННУЮ MSG
 				ПРИВЕСТИ ПЕРЕМЕННЫЕ В ЧИТАЕМЫЙ ВИД И РАЗОБРАТЬСЯ В АЛГОРИТМЕ"""
-			print (new_data)
 			reversed_slovar = dict((v, k) for k, v in slovar.items())
-			msg = """FORM VIEW NOW:
+			table_parameters = """Выбранные параметры формы:
 """
 			for i in new_data.split('/'):
-				print(i)
-				msg += f'|{reversed_slovar[i]}|'
+				table_parameters += f'|{reversed_slovar[i]}|'
 
-			await message.answer(f"""{msg}
-введите новые или нажмите 'завершить'""") #РАБОТАЕТ НЕКОРРЕКТНО
+			await message.answer(f"""{table_parameters}
+Введите новые или нажмите 'завершить'""") #РАБОТАЕТ НЕКОРРЕКТНО
 
 def register_CreateFormHandlers(dp : Dispatcher):
 	dp.register_callback_query_handler(WelcomeProcess, Text(startswith="create_form_"), state = AdminState.admin)
