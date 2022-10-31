@@ -21,7 +21,7 @@ async def ShowEventsProcess(message : types.Message, state : FSMContext):
 	EventArray = await sql_events.extract_events()
 	if EventArray == 404:
 		if isAdmin == 1:
-			await message.answer('NO ACTUAL EVENTS', reply_markup = AdminMainMenu)
+			await message.answer('Нет актуальных мероприятий', reply_markup = AdminMainMenu)
 	else:
 		for i in range (0, len(EventArray)):
 			#ФОРМИРОВАНИЕ ТЕКСТА СООБЩЕНИЯ

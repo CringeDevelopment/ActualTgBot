@@ -46,9 +46,9 @@ MenuNotsNil = ReplyKeyboardMarkup(resize_keyboard=True).row(NotsNilButton_1, Not
 
 
 AdministrationButton_1 = KeyboardButton('/Добавить_мероприятие')
-AdministrationButton_2 = KeyboardButton('/Удалить_мероприятие')
-AdministrationButton_3 = KeyboardButton('/Создать_инвайт_код')
-AdministrationMenu = ReplyKeyboardMarkup(resize_keyboard=True).row(AdministrationButton_1, AdministrationButton_2).add(AdministrationButton_3).row(BackReplyButton)
+#AdministrationButton_2 = KeyboardButton('/Удалить_мероприятие')
+AdministrationButton_2 = KeyboardButton('/Управление_персоналом')
+AdministrationMenu = ReplyKeyboardMarkup(resize_keyboard=True).row(AdministrationButton_1, AdministrationButton_2).row(BackReplyButton)
 
 EventTypeButton_1 = KeyboardButton('Внутреннее')
 EventTypeButton_2 = KeyboardButton('Внешнее')
