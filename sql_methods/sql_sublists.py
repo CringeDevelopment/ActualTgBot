@@ -83,7 +83,7 @@ async def create_sublist(list_name, columns):
     try:
         table_name = 'sublist' + str(list_name)
         create_querry = 'CREATE TABLE IF NOT EXISTS ' + table_name + ' ('
-        arr = columns.split('/')
+        arr = columns
         for i in range (1, len(arr)): #КОСТЫЛЬ
             if i == len(arr) - 1:
                 create_querry += arr[i] + ' ' + slovar[arr[i]] + ')' 
