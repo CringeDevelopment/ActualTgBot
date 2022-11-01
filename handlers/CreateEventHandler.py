@@ -86,6 +86,7 @@ async def SaveWithoutPhoto(message: types.Message, state: FSMContext):
     data = await state.get_data()
     result = await sql_events.add_event(data['title'], data['type'], data['description'], data['date'], 0, 0,
                                         data['source'])
+    await inline_keyboards.InlineFormMenu(result)
     if result == 1:
         if data['source'] == 0: data['source'] = 'without source'
         await message.answer(f"""
