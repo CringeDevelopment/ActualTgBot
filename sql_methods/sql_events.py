@@ -122,21 +122,3 @@ async def extract_event_id(event_name):
             return 404
     finally:
         connection.close()
-
-async def extract_event_date(event_date):
-    connection = mysql.connector.connect(
-            host=host,
-            port = port,
-            user=user,
-            passwd=password,
-            database=db_name
-        )
-    cursor = connection.cursor()
-    try:
-        cursor.execute('SELECT name FROM events WHERE e_date => (%s)', [event_date])
-        if cursor.fetchall() is not None:
-            return cursor.fetchall()
-        else:
-            return 404
-    finally:
-        connection.close()
