@@ -86,7 +86,10 @@ async def ColumnProcess(message : types.Message, state : FSMContext):
 			reversed_slovar = dict((v, k) for k, v in slovar.items())
 			table_parameters = """Выбранные параметры формы: """			
 			for i in data['columns_arr']:
-				table_parameters += f'|{reversed_slovar[i]}|'
+				if i == 'id': #КОСТЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЛЬ
+					pass
+				else:
+					table_parameters += f'|{reversed_slovar[i]}|'
 			await message.answer(f"""{table_parameters} Введите новые или нажмите 'завершить'""") 
 	
 	if MessageResult != 'log' and MessageResult != 'complete':
