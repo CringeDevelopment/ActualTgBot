@@ -90,7 +90,7 @@ async def ColumnProcess(message : types.Message, state : FSMContext):
 					pass
 				else:
 					table_parameters += f'|{reversed_slovar[i]}|'
-			await message.answer(f"""{table_parameters} Введите новые или нажмите 'завершить'""") 
+			await message.answer(f"""{table_parameters} """) 
 	
 	if MessageResult != 'log' and MessageResult != 'complete':
 		await message.answer(f'''Отправь мне вопрос, 
@@ -102,7 +102,7 @@ async def Question_Process(message : types.Message, state : FSMContext):
 	buffer_new = data['another_arr']
 	buffer_new.append(message.text)
 	await state.update_data(another_arr = buffer_new)
-	await message.answer('Вы добавили вопрос к колонке')
+	await message.answer('''Вы добавили вопрос к колонке. Введите новые колонки или нажмите 'завершить' ''')
 	await FormSteps.NewColumn.set()
 	
 def register_CreateFormHandlers(dp : Dispatcher):
