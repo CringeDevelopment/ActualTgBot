@@ -12,12 +12,9 @@ async def add_qq(columns, content):
         )
     cursor = connection.cursor()
     try:
-        print(columns)
-        print(content)
         if len(columns) - len(content) != 0:
             return 808
         cursor.execute('SELECT * FROM qq_list WHERE for_id = %s', [content[0]])
-        print(cursor.fetchall())
         if cursor.fetchone() is not None:
             return 606
         length = len(content)
@@ -54,7 +51,6 @@ async def extract_qq(id_):
             for i in range (0, len(res)):
                 if res[i] is not None:
                     qq_arr.append(res[i])
-            print(qq_arr)
             return qq_arr
     finally:
         connection.close()

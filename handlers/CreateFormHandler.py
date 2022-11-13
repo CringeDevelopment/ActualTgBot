@@ -25,7 +25,8 @@ slovar = {
    'Дата рождения' : 'BirthDate',
    'Факультет' : 'faculty',
    'Группа' : 'group_',
-   'Курс' : 'course'
+   'Курс' : 'course',
+   'id' : 'айди'
 }
 
 class FormSteps(StatesGroup):
@@ -55,15 +56,12 @@ async def ColumnProcess(message : types.Message, state : FSMContext):
 
 	if MessageResult == 'complete':
 		data = await state.get_data()
-		print(data)
 		if len(data['columns_arr']) < 2:
 			await message.answer(f'{message.from_user.full_name} Пожалуйста, выберите параметры для формы!')
 			return
-		print(len(data['columns_arr']) - len(data['another_arr']))
 		if (len(data['columns_arr']) - len(data['another_arr'])) == 0:
 			columns_result = await sql_sublists.create_sublist(data['id_'], data['columns_arr'])
 			question_result = await sql_qq.add_qq(data['columns_arr'], data['another_arr'])
-			print(columns_result, question_result)
 			if columns_result == 1 and question_result == 1 :
 				await message.answer('Форма сохранена в базе данных', reply_markup = AdminMainMenu)
 				await admin_states.SetAdmin()
@@ -72,7 +70,6 @@ async def ColumnProcess(message : types.Message, state : FSMContext):
 
 	else:
 		data = await state.get_data()
-		print(data)
 		if MessageResult in data['columns_arr']:
 			await message.answer('Пожалуйста, введите новые параметры для формы')
 
