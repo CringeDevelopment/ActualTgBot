@@ -7,7 +7,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from datetime import datetime
 from keyboards.reply_keyboards import AdminMainMenu
-from sql_methods import sql_sublists
+from sql_methods import sql_sublists, sql_qq
 from keyboards.reply_keyboards import AdminMainMenu, AdministrationMenu, FormColumnMenu
 #from keyboards import inline_keyboards
 import re 
@@ -36,7 +36,8 @@ async def WelcomeProcess(callback : types.CallbackQuery, state : FSMContext):
 	await state.reset_data()
 	a = callback.data.split('_')[2]
 	await state.update_data(id_ = a) #BUGFIX
-	await state.update_data(columns_arr = [])
+	await state.update_data(columns_arr = ['log', ])
+	await state.update_data(another_arr = [])
 	await callback.message.answer('Выберите параметры для будующей формы', reply_markup = FormColumnMenu)
 	await FormSteps.NewColumn.set()
 
@@ -53,7 +54,7 @@ async def ColumnProcess(message : types.Message, state : FSMContext):
 
 	if MessageResult == 'complete':
 		data = await state.get_data()
-		if len(data['columns_arr']) < 1:
+		if len(data['columns_arr']) < 2:
 			await message.answer(f'{message.from_user.full_name} Пожалуйста, выберите параметры для формы!')
 			return
 		if (len(data['another_arr']) - len(data['columns_arr'])) == -1:
@@ -93,12 +94,11 @@ async def ColumnProcess(message : types.Message, state : FSMContext):
 
 async def Question_Process(message : types.Message, state : FSMContext):
 	data = await state.get_data()
-	await state.update_data(another_arr = [])
 	buffer_new = data['another_arr']
 	buffer_new.append(message.text)
 	await state.update_data(another_arr = buffer_new)
 	await message.answer('Вы добавили вопрос к колонке')
-	await FormSteps.NewQuestion.set()
+	await FormSteps.NewColumn.set()
 	
 def register_CreateFormHandlers(dp : Dispatcher):
 	dp.register_callback_query_handler(WelcomeProcess, Text(startswith="create_form_"), state = AdminState.admin)
