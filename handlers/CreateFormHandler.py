@@ -22,7 +22,7 @@ slovar = {
     'Имя' : 'name',
    'Описание' : 'description',
    'Фото' : 'photo',
-   'Дата рождения' : 'BirthDate',
+   'Дата рождения' : 'birth',
    'Факультет' : 'faculty',
    'Группа' : 'group_',
    'Курс' : 'course',

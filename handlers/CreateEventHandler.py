@@ -25,10 +25,10 @@ class CreatingSteps(StatesGroup):
 
 async def SkipFunction (message : types.Message, state : FSMContext):
 	await CreatingSteps.Photo.set()
-	await state.update_data(title = 'keeekw')
-	await state.update_data(type = 'Внутреннее')
-	await state.update_data(description = 'Кекаем с вас всем комитетом')
-	await state.update_data(date = '2022-11-20 00')
+	await state.update_data(title = 'Крутое мероприятие')
+	await state.update_data(type = 'Гейское')
+	await state.update_data(description = 'НеНочная')
+	await state.update_data(date = '2023-11-20 00')
 	await state.update_data(source = 0)
 
 async def WelcomeProcess(message : types.Message):
