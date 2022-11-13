@@ -12,14 +12,16 @@ async def add_qq(columns, content):
         )
     cursor = connection.cursor()
     try:
-        if len(columns) - len(content) == 1:
+        print(columns)
+        print(content)
+        if len(columns) - len(content) != 0:
             return 808
         cursor.execute('SELECT * FROM qq_list WHERE for_id = %s', [content[0]])
         print(cursor.fetchall())
-        if cursor.fetchall() is not None:
+        if cursor.fetchone() is not None:
             return 606
         length = len(content)
-        columns_arr = columns.split('/')
+        columns_arr = columns
         add_querry = f'INSERT INTO qq_list ('
         for i in range(0, length):
             if i == length-1:

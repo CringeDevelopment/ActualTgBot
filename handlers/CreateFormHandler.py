@@ -36,12 +36,13 @@ async def WelcomeProcess(callback : types.CallbackQuery, state : FSMContext):
 	await state.reset_data()
 	a = callback.data.split('_')[2]
 	await state.update_data(id_ = a) #BUGFIX
-	await state.update_data(columns_arr = ['log', ])
-	await state.update_data(another_arr = [])
+	await state.update_data(columns_arr = ['id', ])
+	await state.update_data(another_arr = [a, ])
 	await callback.message.answer('Выберите параметры для будующей формы', reply_markup = FormColumnMenu)
 	await FormSteps.NewColumn.set()
 
 async def ColumnProcess(message : types.Message, state : FSMContext):
+
 
 ############### ПРОВЕРКА КОМАНДЫ ПО СЛОВАРЮ ####################################
 	try:
@@ -54,12 +55,15 @@ async def ColumnProcess(message : types.Message, state : FSMContext):
 
 	if MessageResult == 'complete':
 		data = await state.get_data()
+		print(data)
 		if len(data['columns_arr']) < 2:
 			await message.answer(f'{message.from_user.full_name} Пожалуйста, выберите параметры для формы!')
 			return
-		if (len(data['another_arr']) - len(data['columns_arr'])) == -1:
+		print(len(data['columns_arr']) - len(data['another_arr']))
+		if (len(data['columns_arr']) - len(data['another_arr'])) == 0:
 			columns_result = await sql_sublists.create_sublist(data['id_'], data['columns_arr'])
 			question_result = await sql_qq.add_qq(data['columns_arr'], data['another_arr'])
+			print(columns_result, question_result)
 			if columns_result == 1 and question_result == 1 :
 				await message.answer('Форма сохранена в базе данных', reply_markup = AdminMainMenu)
 				await admin_states.SetAdmin()
@@ -68,6 +72,7 @@ async def ColumnProcess(message : types.Message, state : FSMContext):
 
 	else:
 		data = await state.get_data()
+		print(data)
 		if MessageResult in data['columns_arr']:
 			await message.answer('Пожалуйста, введите новые параметры для формы')
 

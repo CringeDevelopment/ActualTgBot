@@ -23,6 +23,13 @@ class CreatingSteps(StatesGroup):
 	WebSource = State()
 	Photo = State()
 
+async def SkipFunction (message : types.Message, state : FSMContext):
+	await CreatingSteps.Photo.set()
+	await state.update_data(title = 'keeekw')
+	await state.update_data(type = 'Внутреннее')
+	await state.update_data(description = 'Кекаем с вас всем комитетом')
+	await state.update_data(date = '2022-11-20 00')
+	await state.update_data(source = 0)
 
 async def WelcomeProcess(message : types.Message):
 	await message.answer('Welcome text, send title', reply_markup = types.ReplyKeyboardRemove())
@@ -118,3 +125,4 @@ def register_CreatingEventHandler(dp : Dispatcher):
 	dp.register_message_handler(ErrWebSource, state = CreatingSteps.WebSource)
 	dp.register_message_handler(SaveWithoutPhoto, state = CreatingSteps.Photo)
 	dp.register_message_handler(UploadPhoto, content_types=['photo'], state=CreatingSteps.Photo)
+	dp.register_message_handler(SkipFunction, commands='skipdm', state=AdminState.admin)
