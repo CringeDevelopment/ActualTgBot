@@ -94,7 +94,7 @@ async def ColumnProcess(message : types.Message, state : FSMContext):
 	
 	if MessageResult != 'log' and MessageResult != 'complete':
 		await message.answer(f'''Отправь мне вопрос, 
-который бот задаст при заполнении поля ''')
+который бот задаст при заполнении поля ''', reply_markup = types.ReplyKeyboardRemove())
 		await FormSteps.NewQuestion.set()
 
 async def Question_Process(message : types.Message, state : FSMContext):
@@ -102,7 +102,7 @@ async def Question_Process(message : types.Message, state : FSMContext):
 	buffer_new = data['another_arr']
 	buffer_new.append(message.text)
 	await state.update_data(another_arr = buffer_new)
-	await message.answer('''Вы добавили вопрос к колонке. Введите новые колонки или нажмите 'завершить' ''')
+	await message.answer('''Вы добавили вопрос к колонке. Введите новые колонки или нажмите 'завершить' ''', reply_markup = FormColumnMenu)
 	await FormSteps.NewColumn.set()
 	
 def register_CreateFormHandlers(dp : Dispatcher):
