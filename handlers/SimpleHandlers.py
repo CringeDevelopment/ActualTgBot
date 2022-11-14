@@ -19,11 +19,11 @@ async def WelcomeProcess(message: types.Message):
 	if AdminResult == 1:
 		await admin_states.SetAdmin()
 		await message.delete()
-		await message.answer(f"{message.from_user.full_name} something welcome text, your status is Admin", reply_markup = AdminMainMenu)
+		await message.answer(f"{message.from_user.full_name} , добро пожаловать, ваш статус - Администратор", reply_markup = AdminMainMenu)
 	else:
 		await admin_states.SetUser()
 		await message.delete()
-		await message.answer(f"{message.from_user.full_name} something welcome text, your status is User", reply_markup = UserMainMenu)
+		await message.answer(f"{message.from_user.full_name} добро пожаловать, ваш статус - Пользователь", reply_markup = UserMainMenu)
 
 async def NotsNilProcess(message: types.Message):
 	await message.delete()
@@ -51,12 +51,12 @@ async def AdminAboutProcess(message: types.Message):
 
 async def SubsProcess(message: types.Message):
 	await message.delete()
-	await message.answer("destroy keyboards", reply_markup = types.ReplyKeyboardRemove())
+	await message.answer("убираю клавиатуру...", reply_markup = types.ReplyKeyboardRemove())
 	await message.answer("smthng subs main", reply_markup = SubMenu)
 
 async def AdminSubsProcess(message: types.Message):
 	await message.delete()
-	await message.answer("destroy keyboards", reply_markup = types.ReplyKeyboardRemove())
+	await message.answer("убираю клавиатуру...", reply_markup = types.ReplyKeyboardRemove())
 	await message.answer("smthng subs main", reply_markup = AdminSubMenu)
 
 async def TiosProcess(message: types.Message):
@@ -66,35 +66,35 @@ async def TiosProcess(message: types.Message):
 
 async def BisProcess(message: types.Message):
 	await message.delete()
-	await message.answer("destroy keyboards", reply_markup = types.ReplyKeyboardRemove())
+	await message.answer("убираю клавиатуру...", reply_markup = types.ReplyKeyboardRemove())
 	await message.answer("smthng tios words", reply_markup = BisMenu)
 
 async def AdminTiosProcess(message: types.Message):
 	await message.delete()
-	await message.answer("destroy keyboards", reply_markup = types.ReplyKeyboardRemove())
+	await message.answer("убираю клавиатуру...", reply_markup = types.ReplyKeyboardRemove())
 	await message.answer("smthng tios words", reply_markup = TiosMenu)
 
 async def AdminBisProcess(message: types.Message):
 	await message.delete()
-	await message.answer("destroy keyboards", reply_markup = types.ReplyKeyboardRemove())
+	await message.answer("убираю клавиатуру...", reply_markup = types.ReplyKeyboardRemove())
 	await message.answer("smthng tios words", reply_markup = BisMenu)
 
 async def AdministrationProcess(message: types.Message):
 	AdminResult = await sql_admins.log_in(message.from_user.id)
 	if AdminResult == 1:
 		await message.delete()
-		await message.answer("destroy keyboards", reply_markup = types.ReplyKeyboardRemove())
-		await message.answer("for admins", reply_markup = AdministrationMenu)
+		await message.answer("убираю клавиатуру...", reply_markup = types.ReplyKeyboardRemove())
+		await message.answer("Администрация ресурса:", reply_markup = AdministrationMenu)
 		await admin_states.SetAdmin()
 	else:
-		await message.answer(f"{message.from_user.full_name} u not admin", reply_markup = UserMainMenu)
+		await message.answer(f"{message.from_user.full_name} , вы не Администратор", reply_markup = UserMainMenu)
 	
 
 async def UserBackCallback(callback : types.CallbackQuery):
-	await callback.message.answer('return to main menu', reply_markup = UserMainMenu)
+	await callback.message.answer('Возвращаемся в главное меню', reply_markup = UserMainMenu)
 
 async def AdminBackCallback(callback : types.CallbackQuery):
-	await callback.message.answer('return to main menu', reply_markup = AdminMainMenu)
+	await callback.message.answer('Возвращаемся в главное меню', reply_markup = AdminMainMenu)
 
 async def TiosCallback(callback : types.CallbackQuery):
 	result = callback.data.split('_')[2]

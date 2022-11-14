@@ -13,11 +13,11 @@ from handlers.RegInsideHandler import InsideSteps
 
 
 async def UserBackProcess(message : types.Message, state : FSMContext):
-	await message.answer('return to main menu', reply_markup = UserMainMenu)
+	await message.answer('Возвращаемся в главное меню', reply_markup = UserMainMenu)
 
 
 async def AdminBackProcess(message : types.Message, state : FSMContext):
-	await message.answer('return to main menu', reply_markup = AdminMainMenu)
+	await message.answer('Возвращаемся в главное меню', reply_markup = AdminMainMenu)
 	await admin_states.SetAdmin()
 
 

@@ -65,7 +65,7 @@ async def AddInsideProcess(message : types.Message, state : FSMContext):
 		except:
 			res = await sql_users.add_user(message.from_user.id, message.caption, data['type'], 0, message.photo[0].file_id)
 		if res == 606:
-			await message.answer(f'{message.from_user.full_name} u already registred!', reply_markup = UserMainMenu)
+			await message.answer(f'{message.from_user.full_name} ты уже зарегистрирован!', reply_markup = UserMainMenu)
 			await admin_states.SetUser()
 		else:
 			name = (message.caption).split(',')[0]
