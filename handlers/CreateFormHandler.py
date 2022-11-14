@@ -65,7 +65,6 @@ async def ColumnProcess(message : types.Message, state : FSMContext):
 			if columns_result == 1 and question_result == 1 :
 				await message.answer('Форма сохранена в базе данных', reply_markup = AdminMainMenu)
 				await admin_states.SetAdmin()
-
 ############### НА СЛУЧАЙ ПОВТОРЯЮЩИХСЯ ПАРАМЕТРОВ ####################################
 
 	else:

@@ -12,7 +12,8 @@ async def add_qq(columns, content):
         )
     cursor = connection.cursor()
     try:
-        if len(columns) - len(content) != 0:
+        print(len(columns), len(content))
+        if len(columns) - len(content) != 1:
             return 808
         cursor.execute('SELECT * FROM qq_list WHERE for_id = %s', [content[0]])
         if cursor.fetchone() is not None:
