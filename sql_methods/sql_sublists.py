@@ -68,6 +68,7 @@ async def try_sub(list_name, log):
             return 1
         else:
             return 404 '''
+            #Fix it please. CreateFormHandler log doesnt exist
         return 404
     finally:
         connection.close()
