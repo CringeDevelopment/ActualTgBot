@@ -12,20 +12,19 @@ AspirantMenu = ReplyKeyboardMarkup(resize_keyboard = True).row(RB2, RB3).row(RB4
 RoleMenu = ReplyKeyboardMarkup(resize_keyboard = True).add(RB1).row(RB2, RB3).row(RB4, RB5).add(BackReplyButton)
 
 
-FormList = ['логин', 'имя', 'описание', 'фото', 'дата рождения', 'факультет', 'группа', 'курс',]
+FormList = ['имя', 'описание', 'фото', 'дата рождения', 'факультет', 'группа', 'курс',]
 
 
 #FB - FormButton
 CompleteButton = KeyboardButton('Завершить')
-FB1 = KeyboardButton('Логин')
-FB2 = KeyboardButton('Имя')
-FB3 = KeyboardButton('Описание')
-FB4 = KeyboardButton('Фото')
-FB5 = KeyboardButton('Дата рождения')
-FB6 = KeyboardButton('Факультет')
-FB7 = KeyboardButton('Группа')
-FB8 = KeyboardButton('Курс')
-FormColumnMenu = ReplyKeyboardMarkup(resize_keyboard = True).row(FB1,FB2,FB3).row(FB4,FB5,FB6).row(FB7,FB8).add(CompleteButton).add(BackReplyButton)
+FB1 = KeyboardButton('Имя')
+FB2 = KeyboardButton('Описание')
+FB3 = KeyboardButton('Фото')
+FB4 = KeyboardButton('Дата рождения')
+FB5 = KeyboardButton('Факультет')
+FB6 = KeyboardButton('Группа')
+FB7 = KeyboardButton('Курс')
+FormColumnMenu = ReplyKeyboardMarkup(resize_keyboard = True).row(FB1,FB2).row(FB3,FB4,FB5).row(FB6,FB7).add(CompleteButton).add(BackReplyButton)
 
 
 

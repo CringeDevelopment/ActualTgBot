@@ -18,7 +18,6 @@ global slovar
 
 slovar = {
 	'Завершить' : 'complete',
-    'Логин' : 'log',
     'Имя' : 'name',
    'Описание' : 'description',
    'Фото' : 'photo',
@@ -71,6 +70,7 @@ async def ColumnProcess(message : types.Message, state : FSMContext):
 		data = await state.get_data()
 		if MessageResult in data['columns_arr']:
 			await message.answer('Пожалуйста, введите новые параметры для формы')
+			return
 
 ############### ВЫВОД ВЫБРАННЫХ ПАРАМЕТРОВ И СОХРАНЕНИЕ ####################################
 
@@ -89,10 +89,12 @@ async def ColumnProcess(message : types.Message, state : FSMContext):
 					pass
 				else:
 					table_parameters += f'|{reversed_slovar[i]}|'
-			await message.answer(f"""{table_parameters} """) 
-	
-	if MessageResult != 'log' and MessageResult != 'complete':
-		await message.answer(f'''Отправь мне вопрос, 
+			await message.answer(f"""{table_parameters} """)
+
+
+
+	if MessageResult != 'complete':
+		await message.answer(f'''Отправь мне вопрос,  
 который бот задаст при заполнении поля ''', reply_markup = types.ReplyKeyboardRemove())
 		await FormSteps.NewQuestion.set()
 
