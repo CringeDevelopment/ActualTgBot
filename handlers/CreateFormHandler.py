@@ -65,7 +65,6 @@ async def ColumnProcess(message : types.Message, state : FSMContext):
 			if columns_result == 1 and question_result == 1 :
 				await message.answer('Форма сохранена в базе данных', reply_markup = AdminMainMenu)
 				await admin_states.SetAdmin()
-
 ############### НА СЛУЧАЙ ПОВТОРЯЮЩИХСЯ ПАРАМЕТРОВ ####################################
 
 	else:
@@ -90,11 +89,11 @@ async def ColumnProcess(message : types.Message, state : FSMContext):
 					pass
 				else:
 					table_parameters += f'|{reversed_slovar[i]}|'
-			await message.answer(f"""{table_parameters} Введите новые или нажмите 'завершить'""") 
+			await message.answer(f"""{table_parameters} """) 
 	
 	if MessageResult != 'log' and MessageResult != 'complete':
 		await message.answer(f'''Отправь мне вопрос, 
-который бот задаст при заполнении поля ''')
+который бот задаст при заполнении поля ''', reply_markup = types.ReplyKeyboardRemove())
 		await FormSteps.NewQuestion.set()
 
 async def Question_Process(message : types.Message, state : FSMContext):
@@ -102,7 +101,7 @@ async def Question_Process(message : types.Message, state : FSMContext):
 	buffer_new = data['another_arr']
 	buffer_new.append(message.text)
 	await state.update_data(another_arr = buffer_new)
-	await message.answer('Вы добавили вопрос к колонке')
+	await message.answer('''Вы добавили вопрос к колонке. Введите новые колонки или нажмите 'завершить' ''', reply_markup = FormColumnMenu)
 	await FormSteps.NewColumn.set()
 	
 def register_CreateFormHandlers(dp : Dispatcher):
