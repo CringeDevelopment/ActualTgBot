@@ -12,7 +12,7 @@ AspirantMenu = ReplyKeyboardMarkup(resize_keyboard = True).row(RB2, RB3).row(RB4
 RoleMenu = ReplyKeyboardMarkup(resize_keyboard = True).add(RB1).row(RB2, RB3).row(RB4, RB5).add(BackReplyButton)
 
 
-FormList = ['имя', 'описание', 'фото', 'дата рождения', 'факультет', 'группа', 'курс',]
+FormList = ['имя', 'описание', 'фото', 'дата рождения', 'факультет', 'группа', 'курс', 'Номер телефона']
 
 
 #FB - FormButton
@@ -24,8 +24,14 @@ FB4 = KeyboardButton('Дата рождения')
 FB5 = KeyboardButton('Факультет')
 FB6 = KeyboardButton('Группа')
 FB7 = KeyboardButton('Курс')
-FormColumnMenu = ReplyKeyboardMarkup(resize_keyboard = True).row(FB1,FB2).row(FB3,FB4,FB5).row(FB6,FB7).add(CompleteButton).add(BackReplyButton)
+FB8 = KeyboardButton('Номер телефона')
+FormColumnMenu = ReplyKeyboardMarkup(resize_keyboard = True).row(FB1,FB2).row(FB3,FB4,FB5).row(FB6,FB7, FB8).add(CompleteButton).add(BackReplyButton)
 
+
+FormNameList = ['ФИО капитана команды', 'ФИО участника команды']
+FNL1 = KeyboardButton('ФИО капитана команды')
+FNL2 = KeyboardButton('ФИО участника команды')
+FormNameColumnMenu = ReplyKeyboardMarkup(resize_keyboard = True).row(FNL1).row(FNL2).add(BackReplyButton)
 
 
 MainButton_1 = KeyboardButton('/НОЦЫ_НИЛЫ')
