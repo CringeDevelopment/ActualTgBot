@@ -158,8 +158,8 @@ async def Question_Process(message: types.Message, state: FSMContext):
     data = await state.get_data()
     buffer_new = data['another_arr']
     buffer = data['columns_arr']
-    if buffer[-1] == 'teammates' and (len(data['columns_arr']) - len(data['another_arr'])) == 0:
-        buffer_new[-1] = buffer_new[-1] + '/' + message.text
+    if 'teammates' in buffer and (len(data['columns_arr']) - len(data['another_arr'])) == 0:
+        buffer_new[buffer.index('teammates')] = buffer_new[buffer.index('teammates')] + '/' + message.text
         print(buffer_new)
     else:
         buffer_new.append(message.text)
