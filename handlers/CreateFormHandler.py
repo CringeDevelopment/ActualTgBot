@@ -121,48 +121,37 @@ async def NameBatton(message: types.Message, state: FSMContext):
 
     data = await state.get_data()
 
-    if MessageResult == 'teammates' and (MessageResult in data['columns_arr']):
-        await message.answer(f'''Отправь мне вопрос,  
-который бот задаст при заполнении поля ''', reply_markup=types.ReplyKeyboardRemove())
-        await FormSteps.NewQuestion.set()
-
-    else:
-        if MessageResult == 'capitan':
-            if MessageResult in data['columns_arr']:
-                await message.answer('''Пожалуйста, введите новые параметры для формы''',
+    if MessageResult in data['columns_arr']:
+        await message.answer('''Пожалуйста, введите новые параметры для формы''',
                                          reply_markup=FormNameColumnMenu)
-                return
+        return
 
 
-        buffer = data['columns_arr']
-        buffer.append(MessageResult)
+    buffer = data['columns_arr']
+    buffer.append(MessageResult)
 
-        await state.update_data(columns_arr=buffer)
-        """СОЗДАНИЕ ИНВЕРТИРОВАННОГО СЛОВАРЯ И ЕГО ЗАПИСЬ В ПЕРЕМЕННУЮ MSG
-            ПРИВЕСТИ ПЕРЕМЕННЫЕ В ЧИТАЕМЫЙ ВИД И РАЗОБРАТЬСЯ В АЛГОРИТМЕ"""
-        reversed_slovar = dict((v, k) for k, v in slovar.items())
-        table_parameters = """Выбранные параметры формы: """
-        for i in data['columns_arr']:
-            if i == 'id':  # КОСТЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЛЬ
-                pass
-            else:
-                table_parameters += f'|{reversed_slovar[i]}|'
-        await message.answer(f"""{table_parameters} """)
+    await state.update_data(columns_arr=buffer)
+    """СОЗДАНИЕ ИНВЕРТИРОВАННОГО СЛОВАРЯ И ЕГО ЗАПИСЬ В ПЕРЕМЕННУЮ MSG
+        ПРИВЕСТИ ПЕРЕМЕННЫЕ В ЧИТАЕМЫЙ ВИД И РАЗОБРАТЬСЯ В АЛГОРИТМЕ"""
+    reversed_slovar = dict((v, k) for k, v in slovar.items())
+    table_parameters = """Выбранные параметры формы: """
+    for i in data['columns_arr']:
+        if i == 'id':  # КОСТЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЛЬ
+            pass
+        else:
+            table_parameters += f'|{reversed_slovar[i]}|'
+    await message.answer(f"""{table_parameters} """)
 
-        await message.answer(f'''Отправь мне вопрос,  
+    await message.answer(f'''Отправь мне вопрос,  
 который бот задаст при заполнении поля ''', reply_markup=types.ReplyKeyboardRemove())
-        await FormSteps.NewQuestion.set()
+    await FormSteps.NewQuestion.set()
 
 
 async def Question_Process(message: types.Message, state: FSMContext):
     data = await state.get_data()
     buffer_new = data['another_arr']
     buffer = data['columns_arr']
-    if 'teammates' in buffer and (len(data['columns_arr']) - len(data['another_arr'])) == 0:
-        buffer_new[buffer.index('teammates')] = buffer_new[buffer.index('teammates')] + '/' + message.text
-        print(buffer_new)
-    else:
-        buffer_new.append(message.text)
+    buffer_new.append(message.text)
     await state.update_data(another_arr=buffer_new)
     await message.answer('''Вы добавили вопрос к колонке. Введите новые колонки или нажмите 'завершить' ''',
                              reply_markup=FormColumnMenu)
