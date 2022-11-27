@@ -29,7 +29,6 @@ slovar = {
     'Номер телефона': 'phone',
     'ФИО капитана команды': 'capitan',
     'ФИО участника команды': 'teammates',
-    'Назад': 'back',
     'id': 'айди'
 }
 
@@ -59,6 +58,10 @@ async def ColumnProcess(message: types.Message, state: FSMContext):
         return
 
     if MessageResult == 'name':
+        data = await state.get_data()
+        if ('capitan' and 'teammates') in data['columns_arr']:
+            await message.answer('Пожалуйста, введите новые параметры для формы')
+            return
         await message.answer('''Выберите один из вариантов ниже''', reply_markup=FormNameColumnMenu)
         await FormSteps.NewName.set()
 

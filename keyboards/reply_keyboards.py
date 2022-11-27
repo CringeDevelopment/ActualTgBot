@@ -31,7 +31,7 @@ FormColumnMenu = ReplyKeyboardMarkup(resize_keyboard = True).row(FB1,FB2).row(FB
 FormNameList = ['ФИО капитана команды', 'ФИО участника команды']
 FNL1 = KeyboardButton('ФИО капитана команды')
 FNL2 = KeyboardButton('ФИО участника команды')
-FormNameColumnMenu = ReplyKeyboardMarkup(resize_keyboard = True).row(FNL1).row(FNL2).add(BackReplyButton)
+FormNameColumnMenu = ReplyKeyboardMarkup(resize_keyboard = True).row(FNL1).row(FNL2)
 
 
 MainButton_1 = KeyboardButton('/НОЦЫ_НИЛЫ')

@@ -35,7 +35,7 @@ async def InlineRegMenu(isAdmin, isURL, id_, login_flag, log):
         RegMenu.insert(SubButton)
         return RegMenu
     if isURL != '0':
-        UrlButton = InlineKeyboardButton(text="ПРИНЯТЬ УЧАСТИЕ", url=isURL)
+        UrlButton = InlineKeyboardButton(text="ПРИНЯТЬ УЧАСТИЕ", web_app=isURL)
         RegMenu.insert(UrlButton)
         return RegMenu
 
