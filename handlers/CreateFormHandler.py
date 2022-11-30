@@ -24,7 +24,7 @@ slovar = {
     'Фото': 'photo',
     'Дата рождения': 'birth',
     'Факультет': 'faculty',
-    'Группа': 'group_',
+    'Группа': 'group',
     'Курс': 'course',
     'Номер телефона': 'phone',
     'ФИО капитана команды': 'capitan',
@@ -50,8 +50,6 @@ async def WelcomeProcess(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.answer('Выберите параметры для будующей формы', reply_markup=FormColumnMenu)
     await FormSteps.NewColumn.set()
 
-
-<<<<<<< HEAD
 async def ColumnProcess(message: types.Message, state: FSMContext):
     ############### ПРОВЕРКА КОМАНДЫ ПО СЛОВАРЮ ####################################
     try:
@@ -59,31 +57,21 @@ async def ColumnProcess(message: types.Message, state: FSMContext):
     except:
         await message.answer('Пожалуйста, введите один из перечисленных параметров', reply_markup=FormColumnMenu)
         return
-=======
-	if MessageResult == 'complete':
-		data = await state.get_data()
-		if len(data['columns_arr']) < 2:
-			await message.answer(f'{message.from_user.full_name} Пожалуйста, выберите параметры для формы!')
-			return
-		if (len(data['columns_arr']) - len(data['another_arr'])) == 0:
-			columns_result = await sql_sublists.create_sublist(data['id_'], data['columns_arr'])
-			question_result = await sql_qq.add_qq(data['columns_arr'], data['another_arr'])
-			if columns_result == 1 and question_result == 1 :
-				await message.answer('Форма сохранена в базе данных', reply_markup = AdminMainMenu)
-				await admin_states.SetAdmin()
 
-############### НА СЛУЧАЙ ПОВТОРЯЮЩИХСЯ ПАРАМЕТРОВ ####################################
->>>>>>> parent of bbbd99a (Merge branch 'test_branch_by_Roman' of https://github.com/CringeDevelopment/ActualTgBot into test_branch_by_Roman)
+
 
     match MessageResult:
         case 'name':
             data = await state.get_data()
             if ('capitan' and 'teammates') in data['columns_arr']:
-                await message.answer('Пожалуйста, введите новые параметры для формы')
+                await message.answer('Пожалуйста, введите новые параметры для формы', reply_markup=FormColumnMenu)
                 return
-            elif ('capitan' or 'teammates') in data['columns_arr']:
+            elif ('capitan' or 'teammates') in data['columns_arr'] and data['amount_members'] != '1':
                 await message.answer('''Выберите один из вариантов ниже''', reply_markup=FormNameColumnMenu)
                 await FormSteps.NewName.set()
+            elif (('capitan' or 'teammates') in data['columns_arr']) and data['amount_members'] == '1':
+                await message.answer('Пожалуйста, введите новые параметры для формы', reply_markup=FormColumnMenu)
+                return
             else:
                 await message.answer('''Введите количество участников команды''',
                                      reply_markup=types.ReplyKeyboardRemove())
@@ -93,21 +81,17 @@ async def ColumnProcess(message: types.Message, state: FSMContext):
             ############### ЛОГИКА КНОПКИ ЗАВЕРШИТЬ ####################################
             if MessageResult == 'complete':
                 data = await state.get_data()
-                print(data['columns_arr'])
-                print(data['another_arr'])
                 if len(data['columns_arr']) < 2:
                     await message.answer(f'{message.from_user.full_name} Пожалуйста, выберите параметры для формы!')
                     return
                 if (len(data['columns_arr']) - len(data['another_arr'])) == 0:
                     question_result = await sql_qq.add_qq(data['columns_arr'], data['another_arr'])
 
-<<<<<<< HEAD
                     if 'teammates' in data['columns_arr']:
                         count_teammates = data['amount_members']
                         buffer_columns = data['columns_arr']
                         buffer_columns.remove('teammates')
                         team_columns = []
-                        print(count_teammates)
                         int_count = int(count_teammates)
                         for i in range(1, int_count):
                             team = 'teammate' + str(i)
@@ -121,8 +105,6 @@ async def ColumnProcess(message: types.Message, state: FSMContext):
                         if i != 'id':
                             columns_str = columns_str + '_' + i
                     await sql_events.add_event_clmns(data['id_'], columns_str)
-                    print(columns_result)
-                    print(question_result)
                     if columns_result == 1 and question_result == 1:
                         await message.answer('Форма сохранена в базе данных', reply_markup=AdminMainMenu)
                         await admin_states.SetAdmin()
@@ -161,22 +143,38 @@ async def ColumnProcess(message: types.Message, state: FSMContext):
 
 async def CountTeammates(message: types.Message, state: FSMContext):
     MessageResult = message.text
-    print(MessageResult)
     try:
         int(MessageResult)
-        print(MessageResult)
-        if MessageResult <= '0':
-            print(MessageResult)
+        if MessageResult <= '0' or MessageResult > '9':
             await message.answer('''Введите количество участников команды.
 Пожалуйста, целым положительным числом.''', reply_markup=types.ReplyKeyboardRemove())
             await FormSteps.NewCountTeammates.set()
+            return
 
+        await state.update_data(amount_members=MessageResult)
         match MessageResult:
-            case 1:
-                await message.answer('''Выберите один из вариантов ниже''', reply_markup=FormNameColumnMenu)
-                await FormSteps.NewName.set()
+            case '1':
+                data = await state.get_data()
+                buffer = data['columns_arr']
+                buffer.append('capitan')
+                await state.update_data(columns_arr=buffer)
+                """СОЗДАНИЕ ИНВЕРТИРОВАННОГО СЛОВАРЯ И ЕГО ЗАПИСЬ В ПЕРЕМЕННУЮ MSG
+                    ПРИВЕСТИ ПЕРЕМЕННЫЕ В ЧИТАЕМЫЙ ВИД И РАЗОБРАТЬСЯ В АЛГОРИТМЕ"""
+                reversed_slovar = dict((v, k) for k, v in slovar.items())
+                table_parameters = """Выбранные параметры формы: """
+                for i in data['columns_arr']:
+                    if i == 'id':  # КОСТЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЛЬ
+                        pass
+                    else:
+                        table_parameters += f'|{reversed_slovar[i]}|'
+                await message.answer(f"""{table_parameters} """)
+
+                await message.answer(f'''Отправь мне вопрос,  
+                                           который бот задаст при заполнении поля ''',
+                                     reply_markup=types.ReplyKeyboardRemove())
+                await FormSteps.NewQuestion.set()
+
             case _:
-                await state.update_data(amount_members=MessageResult)
                 await message.answer('''Выберите один из вариантов ниже''', reply_markup=FormNameColumnMenu)
                 await FormSteps.NewName.set()
 
@@ -184,6 +182,7 @@ async def CountTeammates(message: types.Message, state: FSMContext):
         await message.answer('''Введите количество участников команды.
 Пожалуйста, целым положительным числом.''', reply_markup=types.ReplyKeyboardRemove())
         await FormSteps.NewCountTeammates.set()
+        return
 
 
 async def NameBatton(message: types.Message, state: FSMContext):
@@ -197,7 +196,7 @@ async def NameBatton(message: types.Message, state: FSMContext):
     data = await state.get_data()
     if MessageResult in data['columns_arr']:
         await message.answer('''Пожалуйста, введите новые параметры для формы''',
-                             reply_markup=FormNameColumnMenu)
+                                     reply_markup=FormNameColumnMenu)
         return
 
     buffer = data['columns_arr']
@@ -205,7 +204,7 @@ async def NameBatton(message: types.Message, state: FSMContext):
 
     await state.update_data(columns_arr=buffer)
     """СОЗДАНИЕ ИНВЕРТИРОВАННОГО СЛОВАРЯ И ЕГО ЗАПИСЬ В ПЕРЕМЕННУЮ MSG
-        ПРИВЕСТИ ПЕРЕМЕННЫЕ В ЧИТАЕМЫЙ ВИД И РАЗОБРАТЬСЯ В АЛГОРИТМЕ"""
+    ПРИВЕСТИ ПЕРЕМЕННЫЕ В ЧИТАЕМЫЙ ВИД И РАЗОБРАТЬСЯ В АЛГОРИТМЕ"""
     reversed_slovar = dict((v, k) for k, v in slovar.items())
     table_parameters = """Выбранные параметры формы: """
     for i in data['columns_arr']:
@@ -216,7 +215,7 @@ async def NameBatton(message: types.Message, state: FSMContext):
     await message.answer(f"""{table_parameters} """)
 
     await message.answer(f'''Отправь мне вопрос,  
-    который бот задаст при заполнении поля ''', reply_markup=types.ReplyKeyboardRemove())
+который бот задаст при заполнении поля ''', reply_markup=types.ReplyKeyboardRemove())
     await FormSteps.NewQuestion.set()
 
 
@@ -236,39 +235,3 @@ def register_CreateFormHandlers(dp: Dispatcher):
     dp.register_message_handler(CountTeammates, state=FormSteps.NewCountTeammates)
     dp.register_message_handler(NameBatton, state=FormSteps.NewName)
     dp.register_message_handler(Question_Process, state=FormSteps.NewQuestion)
-=======
-		else: 
-				
-			buffer = data['columns_arr']
-			buffer.append(MessageResult)
-							
-			await state.update_data(columns_arr = buffer)
-			"""СОЗДАНИЕ ИНВЕРТИРОВАННОГО СЛОВАРЯ И ЕГО ЗАПИСЬ В ПЕРЕМЕННУЮ MSG
-				ПРИВЕСТИ ПЕРЕМЕННЫЕ В ЧИТАЕМЫЙ ВИД И РАЗОБРАТЬСЯ В АЛГОРИТМЕ"""
-			reversed_slovar = dict((v, k) for k, v in slovar.items())
-			table_parameters = """Выбранные параметры формы: """			
-			for i in data['columns_arr']:
-				if i == 'id': #КОСТЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЛЬ
-					pass
-				else:
-					table_parameters += f'|{reversed_slovar[i]}|'
-			await message.answer(f"""{table_parameters} Введите новые или нажмите 'завершить'""") 
-	
-	if MessageResult != 'log' and MessageResult != 'complete':
-		await message.answer(f'''Отправь мне вопрос, 
-который бот задаст при заполнении поля ''')
-		await FormSteps.NewQuestion.set()
-
-async def Question_Process(message : types.Message, state : FSMContext):
-	data = await state.get_data()
-	buffer_new = data['another_arr']
-	buffer_new.append(message.text)
-	await state.update_data(another_arr = buffer_new)
-	await message.answer('Вы добавили вопрос к колонке')
-	await FormSteps.NewColumn.set()
-	
-def register_CreateFormHandlers(dp : Dispatcher):
-	dp.register_callback_query_handler(WelcomeProcess, Text(startswith="create_form_"), state = AdminState.admin)
-	dp.register_message_handler(ColumnProcess, state=FormSteps.NewColumn)
-	dp.register_message_handler(Question_Process, state=FormSteps.NewQuestion)
->>>>>>> parent of bbbd99a (Merge branch 'test_branch_by_Roman' of https://github.com/CringeDevelopment/ActualTgBot into test_branch_by_Roman)
