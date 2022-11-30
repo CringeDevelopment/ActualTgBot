@@ -69,12 +69,14 @@ async def try_sub(list_name, log):
     )
     cursor = connection.cursor()
     try:
-        querry = f'SELECT log FROM sublist{list_name} WHERE log = %s'
+        '''querry = f'SELECT log FROM sublist{list_name} WHERE log = %s'
         cursor.execute(querry, [log])
         if cursor.fetchone() is not None:
             return 1
         else:
-            return 404
+            return 404 '''
+            #Fix it please. CreateFormHandler log doesnt exist
+        return 404
     finally:
         connection.close()
 
@@ -89,7 +91,6 @@ async def create_sublist(list_name, columns):
     )
     cursor = connection.cursor()
     try:
-        columns.append('log')
         table_name = 'sublist' + str(list_name)
         create_querry = 'CREATE TABLE IF NOT EXISTS ' + table_name + ' ('
         arr = columns
