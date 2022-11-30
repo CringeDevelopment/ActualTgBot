@@ -122,3 +122,23 @@ async def extract_event_id(event_name):
             return 404
     finally:
         connection.close()
+
+async def add_event_clmns(some_data, some_clmns):
+    if (str(some_data)).isdigit() == False:
+        return 808
+    connection = mysql.connector.connect(
+            host=host,
+            port = port,
+            user=user,
+            passwd=password,
+            database=db_name
+        )
+    cursor = connection.cursor()
+    try:
+        #cursor.execute("SELECT name FROM events WHERE id = (%s)")
+        #if cursor.fetchone() is not None:
+        cursor.execute("UPDATE events SET clmns = (%s) WHERE id = (%s)", [some_clmns, some_data])
+        connection.commit()
+        return 1
+    finally:
+        connection.close()
