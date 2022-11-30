@@ -46,7 +46,7 @@ async def WelcomeProcess(callback: types.CallbackQuery, state: FSMContext):
     await state.update_data(id_=a)  # BUGFIX
     await state.update_data(columns_arr=['id', ])
     await state.update_data(another_arr=[a, ])
-    count_teammates = 0
+    await state.update_data(amount_members='0')
     await callback.message.answer('Выберите параметры для будующей формы', reply_markup=FormColumnMenu)
     await FormSteps.NewColumn.set()
 
@@ -59,77 +59,119 @@ async def ColumnProcess(message: types.Message, state: FSMContext):
         await message.answer('Пожалуйста, введите один из перечисленных параметров', reply_markup=FormColumnMenu)
         return
 
-    if MessageResult == 'name':
-        data = await state.get_data()
-        if ('capitan' and 'teammates') in data['columns_arr']:
-            await message.answer('Пожалуйста, введите новые параметры для формы')
-            return
-        await message.answer('''Выберите один из вариантов ниже''', reply_markup=FormNameColumnMenu)
-        await FormSteps.NewName.set()
-
-    else:
-        ############### ЛОГИКА КНОПКИ ЗАВЕРШИТЬ ####################################
-        if MessageResult == 'complete':
-            count_teammates = 0
+    match MessageResult:
+        case 'name':
             data = await state.get_data()
-            print(data['columns_arr'])
-            print(data['another_arr'])
-            if len(data['columns_arr']) < 2:
-                await message.answer(f'{message.from_user.full_name} Пожалуйста, выберите параметры для формы!')
-                return
-            if (len(data['columns_arr']) - len(data['another_arr'])) == 0:
-                columns_result = await sql_sublists.create_sublist(data['id_'], data['columns_arr'])
-                columns_str = ''
-                for i in data['columns_arr']:
-                    if i != 'id':
-                        columns_str =  columns_str + '_' +i
-                await sql_events.add_event_clmns(data['id_'], columns_str)
-                question_result = await sql_qq.add_qq(data['columns_arr'], data['another_arr'])
-                if columns_result == 1 and question_result == 1:
-                    await message.answer('Форма сохранена в базе данных', reply_markup=AdminMainMenu)
-                    await admin_states.SetAdmin()
-        ############### НА СЛУЧАЙ ПОВТОРЯЮЩИХСЯ ПАРАМЕТРОВ ####################################
-
-        else:
-            data = await state.get_data()
-            if MessageResult in data['columns_arr']:
+            if ('capitan' and 'teammates') in data['columns_arr']:
                 await message.answer('Пожалуйста, введите новые параметры для формы')
                 return
+            elif ('capitan' or 'teammates') in data['columns_arr']:
+                await message.answer('''Выберите один из вариантов ниже''', reply_markup=FormNameColumnMenu)
+                await FormSteps.NewName.set()
+            else:
+                await message.answer('''Введите количество участников команды''',
+                                     reply_markup=types.ReplyKeyboardRemove())
+                await FormSteps.NewCountTeammates.set()
 
-            ############### ВЫВОД ВЫБРАННЫХ ПАРАМЕТРОВ И СОХРАНЕНИЕ ####################################
+        case _:
+            ############### ЛОГИКА КНОПКИ ЗАВЕРШИТЬ ####################################
+            if MessageResult == 'complete':
+                data = await state.get_data()
+                print(data['columns_arr'])
+                print(data['another_arr'])
+                if len(data['columns_arr']) < 2:
+                    await message.answer(f'{message.from_user.full_name} Пожалуйста, выберите параметры для формы!')
+                    return
+                if (len(data['columns_arr']) - len(data['another_arr'])) == 0:
+                    question_result = await sql_qq.add_qq(data['columns_arr'], data['another_arr'])
+
+                    if 'teammates' in data['columns_arr']:
+                        count_teammates = data['amount_members']
+                        buffer_columns = data['columns_arr']
+                        buffer_columns.remove('teammates')
+                        team_columns = []
+                        print(count_teammates)
+                        int_count = int(count_teammates)
+                        for i in range(1, int_count):
+                            team = 'teammate' + str(i)
+                            team_columns.append(team)
+                        buffer_columns.extend(team_columns)
+                        await state.update_data(columns_arr=buffer_columns)
+
+                    columns_result = await sql_sublists.create_sublist(data['id_'], data['columns_arr'])
+                    columns_str = ''
+                    for i in data['columns_arr']:
+                        if i != 'id':
+                            columns_str = columns_str + '_' + i
+                    await sql_events.add_event_clmns(data['id_'], columns_str)
+                    print(columns_result)
+                    print(question_result)
+                    if columns_result == 1 and question_result == 1:
+                        await message.answer('Форма сохранена в базе данных', reply_markup=AdminMainMenu)
+                        await admin_states.SetAdmin()
+            ############### НА СЛУЧАЙ ПОВТОРЯЮЩИХСЯ ПАРАМЕТРОВ ####################################
 
             else:
+                data = await state.get_data()
+                if MessageResult in data['columns_arr']:
+                    await message.answer('Пожалуйста, введите новые параметры для формы')
+                    return
 
-                buffer = data['columns_arr']
-                buffer.append(MessageResult)
+                ############### ВЫВОД ВЫБРАННЫХ ПАРАМЕТРОВ И СОХРАНЕНИЕ ####################################
 
-                await state.update_data(columns_arr=buffer)
-                """СОЗДАНИЕ ИНВЕРТИРОВАННОГО СЛОВАРЯ И ЕГО ЗАПИСЬ В ПЕРЕМЕННУЮ MSG
-                    ПРИВЕСТИ ПЕРЕМЕННЫЕ В ЧИТАЕМЫЙ ВИД И РАЗОБРАТЬСЯ В АЛГОРИТМЕ"""
-                reversed_slovar = dict((v, k) for k, v in slovar.items())
-                table_parameters = """Выбранные параметры формы: """
-                for i in data['columns_arr']:
-                    if i == 'id':  # КОСТЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЛЬ
-                        pass
-                    else:
-                        table_parameters += f'|{reversed_slovar[i]}|'
-                await message.answer(f"""{table_parameters} """)
+                else:
 
-        if MessageResult != 'complete':
-            await message.answer(f'''Отправь мне вопрос,  
-который бот задаст при заполнении поля ''', reply_markup=types.ReplyKeyboardRemove())
-            await FormSteps.NewQuestion.set()
+                    buffer = data['columns_arr']
+                    buffer.append(MessageResult)
+
+                    await state.update_data(columns_arr=buffer)
+                    """СОЗДАНИЕ ИНВЕРТИРОВАННОГО СЛОВАРЯ И ЕГО ЗАПИСЬ В ПЕРЕМЕННУЮ MSG
+                        ПРИВЕСТИ ПЕРЕМЕННЫЕ В ЧИТАЕМЫЙ ВИД И РАЗОБРАТЬСЯ В АЛГОРИТМЕ"""
+                    reversed_slovar = dict((v, k) for k, v in slovar.items())
+                    table_parameters = """Выбранные параметры формы: """
+                    for i in data['columns_arr']:
+                        if i == 'id':  # КОСТЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЛЬ
+                            pass
+                        else:
+                            table_parameters += f'|{reversed_slovar[i]}|'
+                    await message.answer(f"""{table_parameters} """)
+
+            if MessageResult != 'complete':
+                await message.answer(f'''Отправь мне вопрос,  
+    который бот задаст при заполнении поля ''', reply_markup=types.ReplyKeyboardRemove())
+                await FormSteps.NewQuestion.set()
+
 
 async def CountTeammates(message: types.Message, state: FSMContext):
-    data = await state.get_data()
-    if ('capitan' or 'teammates') in data['columns_arr']:
+    MessageResult = message.text
+    print(MessageResult)
+    try:
+        int(MessageResult)
+        print(MessageResult)
+        if MessageResult <= '0':
+            print(MessageResult)
+            await message.answer('''Введите количество участников команды.
+Пожалуйста, целым положительным числом.''', reply_markup=types.ReplyKeyboardRemove())
+            await FormSteps.NewCountTeammates.set()
 
-    else:
-        count_teammates =
+        match MessageResult:
+            case 1:
+                await message.answer('''Выберите один из вариантов ниже''', reply_markup=FormNameColumnMenu)
+                await FormSteps.NewName.set()
+            case _:
+                await state.update_data(amount_members=MessageResult)
+                await message.answer('''Выберите один из вариантов ниже''', reply_markup=FormNameColumnMenu)
+                await FormSteps.NewName.set()
+
+    except:
+        await message.answer('''Введите количество участников команды.
+Пожалуйста, целым положительным числом.''', reply_markup=types.ReplyKeyboardRemove())
+        await FormSteps.NewCountTeammates.set()
+
 
 async def NameBatton(message: types.Message, state: FSMContext):
     try:
-        MessageResult = slovar[message.text] #криво
+        MessageResult = slovar[message.text]  # криво
     except:
         await message.answer('''Пожалуйста, введите один из перечисленных параметров''',
                              reply_markup=FormNameColumnMenu)
@@ -138,10 +180,8 @@ async def NameBatton(message: types.Message, state: FSMContext):
     data = await state.get_data()
     if MessageResult in data['columns_arr']:
         await message.answer('''Пожалуйста, введите новые параметры для формы''',
-                                         reply_markup=FormNameColumnMenu)
+                             reply_markup=FormNameColumnMenu)
         return
-
-
 
     buffer = data['columns_arr']
     buffer.append(MessageResult)
@@ -155,7 +195,7 @@ async def NameBatton(message: types.Message, state: FSMContext):
         if i == 'id':  # КОСТЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЛЬ
             pass
         else:
-                table_parameters += f'|{reversed_slovar[i]}|'
+            table_parameters += f'|{reversed_slovar[i]}|'
     await message.answer(f"""{table_parameters} """)
 
     await message.answer(f'''Отправь мне вопрос,  
@@ -169,7 +209,7 @@ async def Question_Process(message: types.Message, state: FSMContext):
     buffer_new.append(message.text)
     await state.update_data(another_arr=buffer_new)
     await message.answer('''Вы добавили вопрос к колонке. Введите новые колонки или нажмите 'завершить' ''',
-                             reply_markup=FormColumnMenu)
+                         reply_markup=FormColumnMenu)
     await FormSteps.NewColumn.set()
 
 

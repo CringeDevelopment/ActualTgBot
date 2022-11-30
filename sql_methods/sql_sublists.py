@@ -14,7 +14,17 @@ slovar = {
     'course': 'INT',
     'phone': 'TEXT',
     'capitan': 'TEXT',
-    'teammates': 'TEXT'
+    'teammates': 'TEXT',
+    'teammate1': 'TEXT',
+    'teammate2': 'TEXT',
+    'teammate3': 'TEXT',
+    'teammate4': 'TEXT',
+    'teammate5': 'TEXT',
+    'teammate6': 'TEXT',
+    'teammate7': 'TEXT',
+    'teammate8': 'TEXT',
+    'teammate9': 'TEXT',
+    'teammate10': 'TEXT',
 }
 
 
