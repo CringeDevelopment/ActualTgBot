@@ -14,17 +14,7 @@ slovar = {
     'course': 'INT',
     'phone': 'TEXT',
     'capitan': 'TEXT',
-    'teammates': 'TEXT',
-    'teammate1': 'TEXT',
-    'teammate2': 'TEXT',
-    'teammate3': 'TEXT',
-    'teammate4': 'TEXT',
-    'teammate5': 'TEXT',
-    'teammate6': 'TEXT',
-    'teammate7': 'TEXT',
-    'teammate8': 'TEXT',
-    'teammate9': 'TEXT',
-    'teammate10': 'TEXT'
+    'teammates': 'TEXT'
 }
 
 
@@ -93,11 +83,18 @@ async def create_sublist(list_name, columns):
         table_name = 'sublist' + str(list_name)
         create_querry = 'CREATE TABLE IF NOT EXISTS ' + table_name + ' ('
         arr = columns
+        count = 0
         for i in range(1, len(arr)):  # КОСТЫЛЬ
             if i == len(arr) - 1:
                 create_querry += arr[i] + ' ' + slovar[arr[i]] + ')'
                 break
-            create_querry += arr[i] + ' ' + slovar[arr[i]] + ','
+            match arr[i]:
+                case 'teammates':
+                    count = count + 1
+                    print(count)
+                    create_querry += arr[i] + str(count) + ' ' + slovar[arr[i]] + ','
+                case _:
+                    create_querry += arr[i] + ' ' + slovar[arr[i]] + ','
         cursor.execute(create_querry)
         connection.commit()
         return 1

@@ -94,9 +94,9 @@ async def ColumnProcess(message: types.Message, state: FSMContext):
                         team_columns = []
                         int_count = int(count_teammates)
                         for i in range(1, int_count):
-                            team = 'teammate' + str(i)
-                            team_columns.append(team)
+                            team_columns.append('teammates')
                         buffer_columns.extend(team_columns)
+                        print(buffer_columns)
                         await state.update_data(columns_arr=buffer_columns)
 
                     columns_result = await sql_sublists.create_sublist(data['id_'], data['columns_arr'])
