@@ -96,14 +96,20 @@ async def ColumnProcess(message: types.Message, state: FSMContext):
                         for i in range(1, int_count):
                             team_columns.append('teammates')
                         buffer_columns.extend(team_columns)
-                        print(buffer_columns)
                         await state.update_data(columns_arr=buffer_columns)
 
                     columns_result = await sql_sublists.create_sublist(data['id_'], data['columns_arr'])
                     columns_str = ''
+                    count = 0
                     for i in data['columns_arr']:
                         if i != 'id':
-                            columns_str = columns_str + '_' + i
+                            match i:
+                                case 'teammates':
+                                    count += 1
+                                    i += str(count)
+                                    columns_str += '_' + i
+                                case _:
+                                    columns_str += '_' + i
                     await sql_events.add_event_clmns(data['id_'], columns_str)
                     if columns_result == 1 and question_result == 1:
                         await message.answer('Форма сохранена в базе данных', reply_markup=AdminMainMenu)
@@ -145,7 +151,7 @@ async def CountTeammates(message: types.Message, state: FSMContext):
     MessageResult = message.text
     try:
         int(MessageResult)
-        if MessageResult <= '0' or MessageResult > '9':
+        if MessageResult <= '0':
             await message.answer('''Введите количество участников команды.
 Пожалуйста, целым положительным числом.''', reply_markup=types.ReplyKeyboardRemove())
             await FormSteps.NewCountTeammates.set()

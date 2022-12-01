@@ -91,7 +91,6 @@ async def create_sublist(list_name, columns):
             match arr[i]:
                 case 'teammates':
                     count = count + 1
-                    print(count)
                     create_querry += arr[i] + str(count) + ' ' + slovar[arr[i]] + ','
                 case _:
                     create_querry += arr[i] + ' ' + slovar[arr[i]] + ','
